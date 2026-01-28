@@ -24,15 +24,16 @@ def cosine_simularity(a,b):
     norm_b = sum([x ** 2 for x in b]) ** 0.5
     return dot_product / (norm_a * norm_b)
 
-def retrieve(query, top_n=3):
+def retrieve(query, top_n=5):
     query_embedding = ollama.embed(model=EMBEDDING_MODEL, input=query)['embeddings'][0]
     similarities = []
     for chunk, embedding in VECTOR_DB:
         similarity = cosine_simularity(query_embedding, embedding)
         similarities.append((chunk, similarity))
 
-        similarities.sort(key=lambda x: x[1], reverse=True)
-        return similarities[:top_n]
+    similarities.sort(key=lambda x: x[1], reverse=True)
+    print(similarities)
+    return similarities[:top_n]
     
 input_query = input('Ask me a question: ')
 retrieved_knowledge = retrieve(input_query)
